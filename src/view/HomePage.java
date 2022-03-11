@@ -1,120 +1,146 @@
 package view;
 
-import view.*;
 import java.sql.SQLException;
-import java.text.NumberFormat;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.swing.JOptionPane;
-import model.User;
-import service.UserService;
-import view.admin.QLUser;
-import view.user.UserDrawMoney;
-import view.user.UserEditPassword;
-import view.user.UserInformation;
+import javax.swing.table.DefaultTableModel;
+import model.*;
+import service.*;
 
 public class HomePage extends javax.swing.JFrame {
 
     private UserService userService = null;
     User user = null;
+    DefaultTableModel defaultTableModel = null;
+    ProductService productService = null;
 
     public HomePage(User user) throws SQLException {
 
         userService = new UserService();
         this.user = user;
+        productService = new ProductService();
 
         initComponents();
-        //hiển thị tên
-        if (user.getRole() == 2) {
-            roleLabel.setText("Xin chào người dùng".toUpperCase());
-            qlUserBT.setVisible(false);
-        } else if (user.getRole() == 1) {
-            roleLabel.setText("Xin chào quản trị".toUpperCase());
-            rutTienButton.setVisible(false);
-            soDuTF.setVisible(false);
-            soDuL.setVisible(false);
+
+        //thêm cột cho table
+        defaultTableModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) { //Cái này là để k cho sửa trực tiếp trên bảng
+                return false;
+            }
+        };
+        productTB.setModel(defaultTableModel);
+        defaultTableModel.addColumn("id");
+        defaultTableModel.addColumn("Tên sản phẩm");
+        defaultTableModel.addColumn("Đơn giá");
+        defaultTableModel.addColumn("Số lượng");
+        defaultTableModel.addColumn("Trạng thái");
+        //thêm dữ liệu vào trong table
+        showTableData(productService.getAllProduct());
+        
+        //tắt 2 nút sửa xóa
+        viewProductBT.setVisible(false);
+        deleteProductBT.setVisible(false);
+    }
+
+    public void showTableData(List<Product> products) {
+        for (Product product : products) {
+            String trangThai = product.getStatus() == 1 ? "Mở" : "Đóng";
+            defaultTableModel.addRow(new Object[]{product.getId(), product.getName(), product.getPrice(),
+                 product.getAmount(), trangThai
+            });
         }
-        nameLabel.setText(user.getName().toUpperCase());
-        //hiển thị số dư
-        Locale localeVN = new Locale("vi", "VN");
-        NumberFormat vn = NumberFormat.getInstance(localeVN);
-        String soDu = vn.format(user.getSoDu());
-        soDuTF.setText(soDu + " VNĐ");
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        logoutButton = new javax.swing.JButton();
-        roleLabel = new javax.swing.JLabel();
-        soDuL = new javax.swing.JLabel();
-        editPasswordButton = new javax.swing.JButton();
-        rutTienButton = new javax.swing.JButton();
-        soDuTF = new javax.swing.JTextField();
-        editPasswordButton1 = new javax.swing.JButton();
-        nameLabel = new javax.swing.JLabel();
-        qlUserBT = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        productTB = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        viewProductBT = new javax.swing.JButton();
+        deleteProductBT = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        editPasswordMI = new javax.swing.JMenuItem();
+        logOutMI = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        addProductMI = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Quản lí sản phẩm");
 
-        logoutButton.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        logoutButton.setText("Đăng xuất");
-        logoutButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logoutButtonActionPerformed(evt);
+        productTB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        productTB.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        productTB.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        productTB.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
-
-        roleLabel.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
-        roleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        roleLabel.setText("XIN CHÀO QUẢN TRỊ");
-
-        soDuL.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        soDuL.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        soDuL.setText("Số dư hiện tại");
-
-        editPasswordButton.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        editPasswordButton.setText("Đổi mật khẩu");
-        editPasswordButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editPasswordButtonActionPerformed(evt);
+        productTB.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
             }
         });
-
-        rutTienButton.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        rutTienButton.setText("Rút tiền");
-        rutTienButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rutTienButtonActionPerformed(evt);
+        productTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                productTBMouseClicked(evt);
             }
         });
+        jScrollPane1.setViewportView(productTB);
 
-        soDuTF.setEditable(false);
-        soDuTF.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        soDuTF.setMargin(new java.awt.Insets(2, 5, 2, 5));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("QUẢN LÍ SẢN PHẨM");
 
-        editPasswordButton1.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        editPasswordButton1.setText("Xem thông tin");
-        editPasswordButton1.addActionListener(new java.awt.event.ActionListener() {
+        viewProductBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        viewProductBT.setText("Xem chi tiết");
+        viewProductBT.setToolTipText("");
+
+        deleteProductBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        deleteProductBT.setText("Xóa");
+
+        jMenu1.setText("Tài Khoản");
+        jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+
+        editPasswordMI.setText("Đổi mật khẩu");
+        editPasswordMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editPasswordButton1ActionPerformed(evt);
+                editPasswordMIActionPerformed(evt);
             }
         });
+        jMenu1.add(editPasswordMI);
 
-        nameLabel.setFont(new java.awt.Font("Tahoma", 0, 25)); // NOI18N
-        nameLabel.setForeground(new java.awt.Color(255, 51, 51));
-        nameLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        nameLabel.setText("TUS");
-
-        qlUserBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        qlUserBT.setText("Quản lí người dùng");
-        qlUserBT.addActionListener(new java.awt.event.ActionListener() {
+        logOutMI.setText("Đăng xuất");
+        logOutMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                qlUserBTActionPerformed(evt);
+                logOutMIActionPerformed(evt);
             }
         });
+        jMenu1.add(logOutMI);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Sản phẩm");
+        jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+
+        addProductMI.setText("Thêm mới sản phẩm");
+        jMenu2.add(addProductMI);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -123,88 +149,51 @@ public class HomePage extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(roleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(nameLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(logoutButton)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(soDuL, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(soDuTF))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(qlUserBT)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(editPasswordButton1)
-                                .addGap(31, 31, 31)
-                                .addComponent(editPasswordButton)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                        .addComponent(rutTienButton)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 286, Short.MAX_VALUE)
+                        .addComponent(viewProductBT)
+                        .addGap(167, 167, 167)
+                        .addComponent(deleteProductBT)
+                        .addGap(275, 275, 275)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(roleLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nameLabel)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(soDuTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(soDuL, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(qlUserBT, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(editPasswordButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rutTienButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(editPasswordButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(viewProductBT, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deleteProductBT, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+    private void editPasswordMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPasswordMIActionPerformed
         // TODO add your handling code here:
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muôn đăng xuất không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+    }//GEN-LAST:event_editPasswordMIActionPerformed
+
+    private void logOutMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutMIActionPerformed
+        // TODO add your handling code here:
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn đăng xuất không?", "Thông báo", JOptionPane.YES_NO_OPTION);
         if (confirm == 0) {
             new Login().setVisible(true);
             this.dispose();
         }
-    }//GEN-LAST:event_logoutButtonActionPerformed
+    }//GEN-LAST:event_logOutMIActionPerformed
 
-    private void editPasswordButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPasswordButton1ActionPerformed
+    private void productTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTBMouseClicked
         // TODO add your handling code here:
-        new UserInformation(user).setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_editPasswordButton1ActionPerformed
-
-    private void editPasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPasswordButtonActionPerformed
-        // TODO add your handling code here:
-        new UserEditPassword(user).setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_editPasswordButtonActionPerformed
-
-    private void rutTienButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rutTienButtonActionPerformed
-        // TODO add your handling code here:
-        new UserDrawMoney(user).setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_rutTienButtonActionPerformed
-
-    private void qlUserBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_qlUserBTActionPerformed
-        // TODO add your handling code here:
-        try {
-            new QLUser(user).setVisible(true);
-            this.dispose();
-        } catch (SQLException ex) {
-            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_qlUserBTActionPerformed
+        viewProductBT.setVisible(true);
+        deleteProductBT.setVisible(true);
+    }//GEN-LAST:event_productTBMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -220,13 +209,13 @@ public class HomePage extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(QLUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(QLUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(QLUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(QLUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomePage.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -240,14 +229,16 @@ public class HomePage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton editPasswordButton;
-    private javax.swing.JButton editPasswordButton1;
-    private javax.swing.JButton logoutButton;
-    private javax.swing.JLabel nameLabel;
-    private javax.swing.JButton qlUserBT;
-    private javax.swing.JLabel roleLabel;
-    private javax.swing.JButton rutTienButton;
-    private javax.swing.JLabel soDuL;
-    private javax.swing.JTextField soDuTF;
+    private javax.swing.JMenuItem addProductMI;
+    private javax.swing.JButton deleteProductBT;
+    private javax.swing.JMenuItem editPasswordMI;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem logOutMI;
+    private javax.swing.JTable productTB;
+    private javax.swing.JButton viewProductBT;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +18,22 @@ public class Login extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void login() {
+        try {
+            user = userService.login(userNameTextField.getText(), String.valueOf(passwotdTextField.getPassword()));
+            if (user == null) {
+                JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại", "ERROR", JOptionPane.ERROR_MESSAGE);
+            } else if (user.getId() == 0) {
+                JOptionPane.showMessageDialog(this, "Sai mật khẩu", "ERROR", JOptionPane.ERROR_MESSAGE);
+            } else {
+                new HomePage(user).setVisible(true);
+                this.dispose();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -29,6 +46,7 @@ public class Login extends javax.swing.JFrame {
         loginButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Quản lí sản phảm");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -40,6 +58,11 @@ public class Login extends javax.swing.JFrame {
 
         userNameTextField.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         userNameTextField.setMargin(new java.awt.Insets(2, 5, 2, 5));
+        userNameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                userNameTextFieldKeyPressed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -47,6 +70,14 @@ public class Login extends javax.swing.JFrame {
 
         passwotdTextField.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         passwotdTextField.setMargin(new java.awt.Insets(2, 5, 2, 5));
+        passwotdTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                passwotdTextFieldKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                passwotdTextFieldKeyReleased(evt);
+            }
+        });
 
         loginButton.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         loginButton.setText("Đăng nhập");
@@ -98,22 +129,27 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        try {
-            // TODO add your handling code here:
-            user = userService.login(userNameTextField.getText(), String.valueOf(passwotdTextField.getPassword()));
-            if (user == null) {
-                JOptionPane.showMessageDialog(this, "Tài khoản không tồn tại", "ERROR", JOptionPane.ERROR_MESSAGE);
-            } else if (user.getId() == 0) {
-                JOptionPane.showMessageDialog(this, "Sai mật khẩu", "ERROR", JOptionPane.ERROR_MESSAGE);
-            } else {
-//                new HomePage(user).setVisible(true);
-//                this.dispose();
-                JOptionPane.showMessageDialog(this, "Bạn đã đúng", "Thông báo", JOptionPane.CLOSED_OPTION);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // TODO add your handling code here:
+        login();
     }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void userNameTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_userNameTextFieldKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            login();
+        }
+    }//GEN-LAST:event_userNameTextFieldKeyPressed
+
+    private void passwotdTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwotdTextFieldKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passwotdTextFieldKeyReleased
+
+    private void passwotdTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwotdTextFieldKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            login();
+        }
+    }//GEN-LAST:event_passwotdTextFieldKeyPressed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
