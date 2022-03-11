@@ -40,6 +40,7 @@ public class UserEditPassword extends javax.swing.JFrame {
         passwordOldTF = new javax.swing.JPasswordField();
         passwordCfTF = new javax.swing.JPasswordField();
         jLabel4 = new javax.swing.JLabel();
+        showPassword = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -84,32 +85,41 @@ public class UserEditPassword extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Xác nhận mật khẩu mới");
 
+        showPassword.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        showPassword.setText("Hiện mật khẩu");
+        showPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showPasswordActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(showPassword))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(backButton)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(passwordCfTF, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
-                            .addComponent(passwordNewTF)
-                            .addComponent(passwordOldTF))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(editButton)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(passwordCfTF, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                                .addComponent(passwordNewTF)
+                                .addComponent(passwordOldTF)))))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(169, Short.MAX_VALUE)
-                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(157, 157, 157))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -130,9 +140,11 @@ public class UserEditPassword extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordCfTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(showPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         pack();
@@ -150,21 +162,50 @@ public class UserEditPassword extends javax.swing.JFrame {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            int rs = userService.editPassword(user.getId(), String.valueOf(passwordOldTF.getPassword()), String.valueOf(passwordNewTF.getPassword()), String.valueOf(passwordCfTF.getPassword()));
-            if (rs == 1) {
-                JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công", "Thông báo", JOptionPane.CLOSED_OPTION);
-                new HomePage(user).setVisible(true);
-                this.dispose();
-            } else if (rs == -1) {
-                JOptionPane.showMessageDialog(this, "Mật khẩu cũ sai", "ERROR", JOptionPane.ERROR_MESSAGE);
-            } else if (rs == -2) {
-                JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không giống với mật khẩu mới", "ERROR", JOptionPane.ERROR_MESSAGE);
+        String passwordOld = String.valueOf(passwordOldTF.getPassword());
+        String passwordNew = String.valueOf(passwordNewTF.getPassword());
+        String passwordCf = String.valueOf(passwordCfTF.getPassword());
+
+        if (passwordOld.equals("") || passwordNew.equals("") || passwordCf.equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (passwordNew.equals(passwordCf)) {
+                // số 1 chỗ id là cho đại
+                try {
+                    int rs = userService.editPassword(user.getId(), passwordOld, passwordNew);
+                    if (rs == 1) {
+                        JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công", "Thông báo", JOptionPane.CLOSED_OPTION);
+                    } else if (rs == 0) {
+                        JOptionPane.showMessageDialog(this, "Mật khẩu cũ sai", "Thông báo", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Đổi mật khẩu không thành công", "Thông báo", JOptionPane.CLOSED_OPTION);
+                    }
+                    new HomePage(user).setVisible(true);
+                    this.dispose();
+                } catch (SQLException ex) {
+                    Logger.getLogger(UserEditPassword.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Mật khẩu xác nhận không trùng với mật khẩu cũ", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserEditPassword.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_editButtonActionPerformed
+
+    private void showPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showPasswordActionPerformed
+        // TODO add your handling code here:
+        if (showPassword.isSelected()) {
+            showPassword.setText("Ẩn mật khẩu");
+            passwordOldTF.setEchoChar((char) 0);
+            passwordNewTF.setEchoChar((char) 0);
+            passwordCfTF.setEchoChar((char) 0);
+        } else {
+            showPassword.setText("Hiện mật khẩu");
+            passwordOldTF.setEchoChar('*');
+            passwordNewTF.setEchoChar('*');
+            passwordCfTF.setEchoChar('*');
+        }
+    }//GEN-LAST:event_showPasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,7 +233,6 @@ public class UserEditPassword extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(UserEditPassword.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -212,5 +252,6 @@ public class UserEditPassword extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordCfTF;
     private javax.swing.JPasswordField passwordNewTF;
     private javax.swing.JPasswordField passwordOldTF;
+    private javax.swing.JCheckBox showPassword;
     // End of variables declaration//GEN-END:variables
 }

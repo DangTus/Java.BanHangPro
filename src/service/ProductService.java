@@ -13,7 +13,11 @@ public class ProductService {
         productDao = new ProductDao();
     }
 
-    public List<Product> getAllProduct() throws SQLException {
-        return productDao.getAllProduct();
+    public List<Product> getProductByCategori(String categori) throws SQLException {
+        return productDao.getProductByCategori(categori);
+    }
+
+    public List<String> getAllCategori() throws SQLException {
+        return productDao.getAllCategori();
     }
 }

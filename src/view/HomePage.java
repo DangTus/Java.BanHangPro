@@ -2,10 +2,13 @@ package view;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.*;
 import service.*;
+import view.user.UserEditPassword;
 
 public class HomePage extends javax.swing.JFrame {
 
@@ -35,20 +38,36 @@ public class HomePage extends javax.swing.JFrame {
         defaultTableModel.addColumn("Đơn giá");
         defaultTableModel.addColumn("Số lượng");
         defaultTableModel.addColumn("Trạng thái");
-        //thêm dữ liệu vào trong table
-        showTableData(productService.getAllProduct());
-        
-        //tắt 2 nút sửa xóa
-        viewProductBT.setVisible(false);
-        deleteProductBT.setVisible(false);
+
+        // hàm này dùng để hiện categori theo dạng combobox
+        showCategori();
     }
 
     public void showTableData(List<Product> products) {
         for (Product product : products) {
             String trangThai = product.getStatus() == 1 ? "Mở" : "Đóng";
             defaultTableModel.addRow(new Object[]{product.getId(), product.getName(), product.getPrice(),
-                 product.getAmount(), trangThai
+                product.getAmount(), trangThai
             });
+        }
+    }
+
+    public void showCategori() throws SQLException {
+        List<String> categories = productService.getAllCategori();
+        categoriCB.addItem("Tất cả");
+        for (String categori : categories) {
+            categoriCB.addItem(categori);
+        }
+    }
+    
+    public void displayViewDeleteBT() {
+        int row = productTB.getSelectedRow();
+        if (row != -1) {
+            viewProductBT.setVisible(true);
+            deleteProductBT.setVisible(true);
+        } else {
+            viewProductBT.setVisible(false);
+            deleteProductBT.setVisible(false);
         }
     }
 
@@ -61,6 +80,8 @@ public class HomePage extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         viewProductBT = new javax.swing.JButton();
         deleteProductBT = new javax.swing.JButton();
+        categoriCB = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         editPasswordMI = new javax.swing.JMenuItem();
@@ -81,18 +102,6 @@ public class HomePage extends javax.swing.JFrame {
             }
         ));
         productTB.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        productTB.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-        });
-        productTB.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-            }
-        });
         productTB.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 productTBMouseClicked(evt);
@@ -110,6 +119,16 @@ public class HomePage extends javax.swing.JFrame {
 
         deleteProductBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         deleteProductBT.setText("Xóa");
+
+        categoriCB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        categoriCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                categoriCBActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel2.setText("Xem theo thương hiệu");
 
         jMenu1.setText("Tài Khoản");
         jMenu1.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
@@ -150,20 +169,29 @@ public class HomePage extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 286, Short.MAX_VALUE)
-                        .addComponent(viewProductBT)
-                        .addGap(167, 167, 167)
-                        .addComponent(deleteProductBT)
-                        .addGap(275, 275, 275)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 896, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(categoriCB, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(viewProductBT)
+                .addGap(167, 167, 167)
+                .addComponent(deleteProductBT)
+                .addGap(286, 286, 286))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(categoriCB, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -178,6 +206,8 @@ public class HomePage extends javax.swing.JFrame {
 
     private void editPasswordMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPasswordMIActionPerformed
         // TODO add your handling code here:
+        new UserEditPassword(user).setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_editPasswordMIActionPerformed
 
     private void logOutMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutMIActionPerformed
@@ -191,9 +221,20 @@ public class HomePage extends javax.swing.JFrame {
 
     private void productTBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_productTBMouseClicked
         // TODO add your handling code here:
-        viewProductBT.setVisible(true);
-        deleteProductBT.setVisible(true);
+        displayViewDeleteBT();
     }//GEN-LAST:event_productTBMouseClicked
+
+    private void categoriCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoriCBActionPerformed
+        // TODO add your handling code here:
+        defaultTableModel.setRowCount(0);
+        String categoriSelected = categoriCB.getSelectedItem().toString();
+        try {
+            showTableData(productService.getProductByCategori(categoriSelected));
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        displayViewDeleteBT();
+    }//GEN-LAST:event_categoriCBActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -230,9 +271,11 @@ public class HomePage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addProductMI;
+    private javax.swing.JComboBox<String> categoriCB;
     private javax.swing.JButton deleteProductBT;
     private javax.swing.JMenuItem editPasswordMI;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
