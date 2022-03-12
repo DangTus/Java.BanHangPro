@@ -10,45 +10,19 @@ import service.ProductService;
 import view.HomePage;
 import view.Login;
 
-public class ProductViewById extends javax.swing.JFrame {
+public class ProductAdd extends javax.swing.JFrame {
 
     User user = null;
     ProductService productService = null;
-    int id_product = 0;
 
-    public ProductViewById(User user, int id_product) throws SQLException {
+    public ProductAdd(User user) throws SQLException {
 
         this.user = user;
-        this.id_product = id_product;
         productService = new ProductService();
 
         initComponents();
-
-        //an nut chinh sua
-        editBT.setVisible(false);
-
-        //show data ra cac Text Field
-        showData();
-    }
-
-    final void showData() throws SQLException {
-        Product product = productService.getProductById(id_product);
-        idTF.setText(String.valueOf(product.getId()));
-        nameTF.setText(product.getName());
-        priceSp.setValue(product.getPrice());
-        amountSp.setValue(product.getAmount());
-        aboutTA.setText(product.getAbout());
-
-        //show brand
-        String brandSelected = productService.getNameBrand(product.getIdBrand());
+        
         showBrand();
-        brandCB.setSelectedItem(brandSelected);
-
-        //show status
-        String status = product.getStatus() == 1 ? "Mở" : "Đóng";
-        statusCB.addItem("Mở");
-        statusCB.addItem("Đóng");
-        statusCB.setSelectedItem(status);
     }
 
     final void showBrand() throws SQLException {
@@ -56,26 +30,6 @@ public class ProductViewById extends javax.swing.JFrame {
         for (String brand : brands) {
             brandCB.addItem(brand);
         }
-    }
-
-    public void unHidden() {
-        nameTF.setEditable(true);
-        nameTF.setEnabled(true);
-
-        priceSp.setEnabled(true);
-
-        amountSp.setEnabled(true);
-
-        brandCB.setEnabled(true);
-
-        statusCB.setEnabled(true);
-
-        editBT.setVisible(true);
-
-        editVeiwBT.setVisible(false);
-
-        aboutTA.setEditable(true);
-        aboutTA.setEnabled(true);
     }
 
     /**
@@ -87,29 +41,51 @@ public class ProductViewById extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel7 = new javax.swing.JLabel();
+        addBT = new javax.swing.JButton();
+        priceSp = new javax.swing.JSpinner();
+        amountSp = new javax.swing.JSpinner();
+        brandCB = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         backBT = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        idTF = new javax.swing.JTextField();
         nameTF = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        editVeiwBT = new javax.swing.JButton();
-        editBT = new javax.swing.JButton();
-        priceSp = new javax.swing.JSpinner();
-        amountSp = new javax.swing.JSpinner();
-        brandCB = new javax.swing.JComboBox<>();
-        statusCB = new javax.swing.JComboBox<>();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         aboutTA = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Quản lí sản phẩm");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Số lượng");
+
+        addBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        addBT.setText("Thêm mới");
+        addBT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBTActionPerformed(evt);
+            }
+        });
+
+        priceSp.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        priceSp.setModel(new javax.swing.SpinnerNumberModel(0, 0, 2147483647, 1));
+
+        amountSp.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        amountSp.setModel(new javax.swing.SpinnerNumberModel(0, 0, 100000, 1));
+
+        brandCB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("VNĐ");
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Mô tả");
 
         backBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         backBT.setText("Quay lại");
@@ -121,20 +97,9 @@ public class ProductViewById extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("CHI TIẾT SẢN PHẨM");
+        jLabel1.setText("THÊM SẢN PHẨM MỚI");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Id");
-
-        idTF.setEditable(false);
-        idTF.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        idTF.setEnabled(false);
-        idTF.setMargin(new java.awt.Insets(2, 5, 2, 5));
-
-        nameTF.setEditable(false);
         nameTF.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        nameTF.setEnabled(false);
         nameTF.setMargin(new java.awt.Insets(2, 5, 2, 5));
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
@@ -149,57 +114,9 @@ public class ProductViewById extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Thương hiệu");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("Trạng thái");
-
-        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("Số lượng");
-
-        editVeiwBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        editVeiwBT.setText("Chỉnh sửa");
-        editVeiwBT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editVeiwBTActionPerformed(evt);
-            }
-        });
-
-        editBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        editBT.setText("Sửa");
-        editBT.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editBTActionPerformed(evt);
-            }
-        });
-
-        priceSp.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        priceSp.setModel(new javax.swing.SpinnerNumberModel(0, 0, 2147483647, 1));
-        priceSp.setEnabled(false);
-
-        amountSp.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        amountSp.setModel(new javax.swing.SpinnerNumberModel(0, 0, 100000, 1));
-        amountSp.setEnabled(false);
-
-        brandCB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        brandCB.setEnabled(false);
-
-        statusCB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        statusCB.setEnabled(false);
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("VNĐ");
-
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel9.setText("Mô tả");
-
-        aboutTA.setEditable(false);
         aboutTA.setColumns(20);
         aboutTA.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         aboutTA.setRows(5);
-        aboutTA.setEnabled(false);
         aboutTA.setMargin(new java.awt.Insets(2, 5, 2, 5));
         jScrollPane1.setViewportView(aboutTA);
 
@@ -211,10 +128,6 @@ public class ProductViewById extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(idTF))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -222,18 +135,14 @@ public class ProductViewById extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(backBT)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(amountSp, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(statusCB, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(backBT)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -246,14 +155,10 @@ public class ProductViewById extends javax.swing.JFrame {
                                 .addComponent(jLabel8)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(editVeiwBT, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(editBT)
-                        .addGap(17, 17, 17)))
-                .addGap(180, 180, 180))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(170, 170, 170)
+                .addComponent(addBT)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,10 +168,6 @@ public class ProductViewById extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(idTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nameTF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -286,22 +187,51 @@ public class ProductViewById extends javax.swing.JFrame {
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(brandCB, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(statusCB, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(editVeiwBT, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(editBT, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addComponent(addBT, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void addBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTActionPerformed
+        // TODO add your handling code here:
+        if(nameTF.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            Product product = new Product();
+            product.setName(nameTF.getText());
+            product.setPrice((int) priceSp.getValue());
+            product.setAmount((int) amountSp.getValue());
+            product.setAbout(aboutTA.getText());
+            //get brand
+            String brand = brandCB.getSelectedItem().toString();
+            try {
+                int id_brand = productService.getIdBrand(brand);
+                product.setIdBrand(id_brand);
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductViewById.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //goi ham xu li sql
+            try {
+                int rs = productService.addProduct(product);
+                if (rs == 1) {
+                    JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công", "Thông báo", JOptionPane.CLOSED_OPTION);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Có lỗi khi thêm sản phẩm", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+                new HomePage(user).setVisible(true);
+                this.dispose();
+            } catch (SQLException ex) {
+                Logger.getLogger(ProductViewById.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }           
+    }//GEN-LAST:event_addBTActionPerformed
 
     private void backBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBTActionPerformed
         // TODO add your handling code here:
@@ -309,49 +239,9 @@ public class ProductViewById extends javax.swing.JFrame {
             new HomePage(user).setVisible(true);
             this.dispose();
         } catch (SQLException ex) {
-            Logger.getLogger(ProductViewById.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductAdd.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_backBTActionPerformed
-
-    private void editVeiwBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editVeiwBTActionPerformed
-        // TODO add your handling code here:
-        unHidden();
-    }//GEN-LAST:event_editVeiwBTActionPerformed
-
-    private void editBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBTActionPerformed
-        // TODO add your handling code here:
-        Product product = new Product();
-        product.setId(Integer.valueOf(idTF.getText()));
-        product.setName(nameTF.getText());
-        product.setPrice((int) priceSp.getValue());
-        product.setAmount((int) amountSp.getValue());
-        product.setAbout(aboutTA.getText());
-        //get brand
-        String brand = brandCB.getSelectedItem().toString();
-        try {
-            int id_brand = productService.getIdBrand(brand);
-            product.setIdBrand(id_brand);
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductViewById.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //get status
-        int status = statusCB.getSelectedItem().toString() == "Mở" ? 1 : 0;
-        product.setStatus(status);
-
-        //goi ham xu li sql
-        try {
-            int rs = productService.editProductById(product);
-            if (rs == 1) {
-                JOptionPane.showMessageDialog(this, "Cập nhật thông tin thành công", "Thông báo", JOptionPane.CLOSED_OPTION);
-            } else {
-                JOptionPane.showMessageDialog(this, "Có lỗi khi cập nhật thông tin", "ERROR", JOptionPane.ERROR_MESSAGE);
-            }
-            new HomePage(user).setVisible(true);
-            this.dispose();
-        } catch (SQLException ex) {
-            Logger.getLogger(ProductViewById.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_editBTActionPerformed
 
     /**
      * @param args the command line arguments
@@ -370,13 +260,13 @@ public class ProductViewById extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ProductViewById.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ProductViewById.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ProductViewById.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ProductViewById.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProductAdd.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -390,24 +280,19 @@ public class ProductViewById extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea aboutTA;
+    private javax.swing.JButton addBT;
     private javax.swing.JSpinner amountSp;
     private javax.swing.JButton backBT;
     private javax.swing.JComboBox<String> brandCB;
-    private javax.swing.JButton editBT;
-    private javax.swing.JButton editVeiwBT;
-    private javax.swing.JTextField idTF;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField nameTF;
     private javax.swing.JSpinner priceSp;
-    private javax.swing.JComboBox<String> statusCB;
     // End of variables declaration//GEN-END:variables
 }

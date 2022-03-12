@@ -25,7 +25,23 @@ public class ProductService {
         return productDao.getProductById(id_product);
     }
     
+    public int getIdBrand(String brand) throws SQLException {
+        return productDao.getIdBrand(brand);
+    }
+    
     public String getNameBrand(int id_brand) throws SQLException {
         return productDao.getNameBrand(id_brand);
+    }
+    
+    public int editProductById(Product product) throws SQLException {
+        return productDao.editProductById(product);
+    }
+    
+    public int addProduct(Product product) throws SQLException {
+        return productDao.addProduct(product);
+    }
+    
+    public void deleteProduct(int id_product) throws SQLException {
+        productDao.deleteProduct(id_product);
     }
 }

@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.*;
 import service.*;
+import view.product.ProductAdd;
 import view.product.ProductViewById;
 import view.user.UserEditPassword;
 
@@ -44,13 +45,19 @@ public class HomePage extends javax.swing.JFrame {
         showBrand();
     }
 
-    public void showTableData(List<Product> products) {
+    public void showTableData() throws SQLException {
+        defaultTableModel.setRowCount(0);
+        String brandSelected = brandCB.getSelectedItem().toString();
+        List<Product> products = productService.getProductByBrand(brandSelected);
+
         for (Product product : products) {
             String trangThai = product.getStatus() == 1 ? "Mở" : "Đóng";
             defaultTableModel.addRow(new Object[]{product.getId(), product.getName(), product.getPrice(),
                 product.getAmount(), trangThai
             });
         }
+
+        displayViewDeleteBT();
     }
 
     public void showBrand() throws SQLException {
@@ -60,7 +67,7 @@ public class HomePage extends javax.swing.JFrame {
             brandCB.addItem(brand);
         }
     }
-    
+
     public void displayViewDeleteBT() {
         int row = productTB.getSelectedRow();
         if (row != -1) {
@@ -125,6 +132,11 @@ public class HomePage extends javax.swing.JFrame {
 
         deleteProductBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         deleteProductBT.setText("Xóa");
+        deleteProductBT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteProductBTActionPerformed(evt);
+            }
+        });
 
         brandCB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         brandCB.addActionListener(new java.awt.event.ActionListener() {
@@ -161,6 +173,11 @@ public class HomePage extends javax.swing.JFrame {
         jMenu2.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
 
         addProductMI.setText("Thêm mới sản phẩm");
+        addProductMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addProductMIActionPerformed(evt);
+            }
+        });
         jMenu2.add(addProductMI);
 
         jMenuBar1.add(jMenu2);
@@ -232,14 +249,11 @@ public class HomePage extends javax.swing.JFrame {
 
     private void brandCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brandCBActionPerformed
         // TODO add your handling code here:
-        defaultTableModel.setRowCount(0);
-        String categoriSelected = brandCB.getSelectedItem().toString();
-        try {
-            showTableData(productService.getProductByBrand(categoriSelected));
+        try {            
+            showTableData();
         } catch (SQLException ex) {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        displayViewDeleteBT();
     }//GEN-LAST:event_brandCBActionPerformed
 
     private void viewProductBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewProductBTActionPerformed
@@ -251,8 +265,33 @@ public class HomePage extends javax.swing.JFrame {
             this.dispose();
         } catch (SQLException ex) {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }
     }//GEN-LAST:event_viewProductBTActionPerformed
+
+    private void addProductMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProductMIActionPerformed
+        // TODO add your handling code here:
+        try {
+            new ProductAdd(user).setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_addProductMIActionPerformed
+
+    private void deleteProductBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteProductBTActionPerformed
+        // TODO add your handling code here:
+        int row = productTB.getSelectedRow();
+        int id_product = Integer.valueOf(String.valueOf(productTB.getValueAt(row, 0)));
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa không?", "Thông báo", JOptionPane.YES_NO_OPTION);
+        if (confirm == 0) {
+            try {
+                productService.deleteProduct(id_product);
+                showTableData();
+            } catch (SQLException ex) {
+                Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_deleteProductBTActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
