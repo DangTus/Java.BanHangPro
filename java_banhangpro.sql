@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th3 10, 2022 lúc 04:19 PM
+-- Thời gian đã tạo: Th3 12, 2022 lúc 12:01 PM
 -- Phiên bản máy phục vụ: 10.4.22-MariaDB
 -- Phiên bản PHP: 8.1.2
 
@@ -24,19 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Cấu trúc bảng cho bảng `categori`
+-- Cấu trúc bảng cho bảng `brand`
 --
 
-CREATE TABLE `categori` (
-  `id_categori` int(11) NOT NULL,
-  `name_categori` varchar(100) COLLATE utf8_unicode_ci NOT NULL
+CREATE TABLE `brand` (
+  `id_brand` int(11) NOT NULL,
+  `name_brand` varchar(100) COLLATE utf8_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Đang đổ dữ liệu cho bảng `categori`
+-- Đang đổ dữ liệu cho bảng `brand`
 --
 
-INSERT INTO `categori` (`id_categori`, `name_categori`) VALUES
+INSERT INTO `brand` (`id_brand`, `name_brand`) VALUES
 (1, 'iPhone'),
 (2, 'Samsung'),
 (3, 'OPPO');
@@ -52,7 +52,7 @@ CREATE TABLE `product` (
   `name_product` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `price` int(11) DEFAULT NULL,
   `amount` int(11) NOT NULL DEFAULT 0,
-  `id_categori` int(11) NOT NULL,
+  `id_brand` int(11) NOT NULL,
   `about` text COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` int(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -61,9 +61,9 @@ CREATE TABLE `product` (
 -- Đang đổ dữ liệu cho bảng `product`
 --
 
-INSERT INTO `product` (`id_product`, `name_product`, `price`, `amount`, `id_categori`, `about`, `status`) VALUES
+INSERT INTO `product` (`id_product`, `name_product`, `price`, `amount`, `id_brand`, `about`, `status`) VALUES
 (1, 'iPhone 13 Pro Max 128GB', 32390000, 10, 1, NULL, 1),
-(2, 'Samsung Galaxy A52s 5G 128GB', 10990000, 10, 2, NULL, 1),
+(2, 'Samsung Galaxy A52s 5G 128GB', 10990000, 10, 2, NULL, 0),
 (3, 'OPPO Reno6 Z 5G', 8990000, 10, 3, NULL, 1);
 
 -- --------------------------------------------------------
@@ -84,24 +84,25 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id_user`, `name_user`, `user_name`, `password`) VALUES
-(1, 'Đặng (Tus) Văn Hoài Tú', 'tus', 'admin');
+(1, 'Đặng (Tus) Văn Hoài Tú', 'tus', 'admin'),
+(2, 'a', 'a', 'a');
 
 --
 -- Chỉ mục cho các bảng đã đổ
 --
 
 --
--- Chỉ mục cho bảng `categori`
+-- Chỉ mục cho bảng `brand`
 --
-ALTER TABLE `categori`
-  ADD PRIMARY KEY (`id_categori`);
+ALTER TABLE `brand`
+  ADD PRIMARY KEY (`id_brand`);
 
 --
 -- Chỉ mục cho bảng `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`id_product`),
-  ADD KEY `id_categori` (`id_categori`);
+  ADD KEY `id_categori` (`id_brand`);
 
 --
 -- Chỉ mục cho bảng `user`
@@ -114,10 +115,10 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT cho bảng `categori`
+-- AUTO_INCREMENT cho bảng `brand`
 --
-ALTER TABLE `categori`
-  MODIFY `id_categori` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `brand`
+  MODIFY `id_brand` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT cho bảng `product`
@@ -129,7 +130,7 @@ ALTER TABLE `product`
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -139,7 +140,7 @@ ALTER TABLE `user`
 -- Các ràng buộc cho bảng `product`
 --
 ALTER TABLE `product`
-  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`id_categori`) REFERENCES `categori` (`id_categori`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`id_brand`) REFERENCES `brand` (`id_brand`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

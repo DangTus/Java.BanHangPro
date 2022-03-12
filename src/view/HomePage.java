@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.*;
 import service.*;
+import view.product.ProductViewById;
 import view.user.UserEditPassword;
 
 public class HomePage extends javax.swing.JFrame {
@@ -40,7 +41,7 @@ public class HomePage extends javax.swing.JFrame {
         defaultTableModel.addColumn("Trạng thái");
 
         // hàm này dùng để hiện categori theo dạng combobox
-        showCategori();
+        showBrand();
     }
 
     public void showTableData(List<Product> products) {
@@ -52,11 +53,11 @@ public class HomePage extends javax.swing.JFrame {
         }
     }
 
-    public void showCategori() throws SQLException {
-        List<String> categories = productService.getAllCategori();
-        categoriCB.addItem("Tất cả");
-        for (String categori : categories) {
-            categoriCB.addItem(categori);
+    public void showBrand() throws SQLException {
+        List<String> brands = productService.getAllBrand();
+        brandCB.addItem("Tất cả");
+        for (String brand : brands) {
+            brandCB.addItem(brand);
         }
     }
     
@@ -80,7 +81,7 @@ public class HomePage extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         viewProductBT = new javax.swing.JButton();
         deleteProductBT = new javax.swing.JButton();
-        categoriCB = new javax.swing.JComboBox<>();
+        brandCB = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -116,14 +117,19 @@ public class HomePage extends javax.swing.JFrame {
         viewProductBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         viewProductBT.setText("Xem chi tiết");
         viewProductBT.setToolTipText("");
+        viewProductBT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewProductBTActionPerformed(evt);
+            }
+        });
 
         deleteProductBT.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
         deleteProductBT.setText("Xóa");
 
-        categoriCB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
-        categoriCB.addActionListener(new java.awt.event.ActionListener() {
+        brandCB.setFont(new java.awt.Font("Tahoma", 0, 15)); // NOI18N
+        brandCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                categoriCBActionPerformed(evt);
+                brandCBActionPerformed(evt);
             }
         });
 
@@ -174,7 +180,7 @@ public class HomePage extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(categoriCB, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(brandCB, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -190,7 +196,7 @@ public class HomePage extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(categoriCB, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(brandCB, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,17 +230,29 @@ public class HomePage extends javax.swing.JFrame {
         displayViewDeleteBT();
     }//GEN-LAST:event_productTBMouseClicked
 
-    private void categoriCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoriCBActionPerformed
+    private void brandCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brandCBActionPerformed
         // TODO add your handling code here:
         defaultTableModel.setRowCount(0);
-        String categoriSelected = categoriCB.getSelectedItem().toString();
+        String categoriSelected = brandCB.getSelectedItem().toString();
         try {
-            showTableData(productService.getProductByCategori(categoriSelected));
+            showTableData(productService.getProductByBrand(categoriSelected));
         } catch (SQLException ex) {
             Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
         }
         displayViewDeleteBT();
-    }//GEN-LAST:event_categoriCBActionPerformed
+    }//GEN-LAST:event_brandCBActionPerformed
+
+    private void viewProductBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewProductBTActionPerformed
+        // TODO add your handling code here:
+        int row = productTB.getSelectedRow();
+        int id_product = Integer.valueOf(String.valueOf(productTB.getValueAt(row, 0)));
+        try {
+            new ProductViewById(user, id_product).setVisible(true);
+            this.dispose();
+        } catch (SQLException ex) {
+            Logger.getLogger(HomePage.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+    }//GEN-LAST:event_viewProductBTActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -271,7 +289,7 @@ public class HomePage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem addProductMI;
-    private javax.swing.JComboBox<String> categoriCB;
+    private javax.swing.JComboBox<String> brandCB;
     private javax.swing.JButton deleteProductBT;
     private javax.swing.JMenuItem editPasswordMI;
     private javax.swing.JLabel jLabel1;

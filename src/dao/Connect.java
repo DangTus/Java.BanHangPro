@@ -21,13 +21,4 @@ public class Connect {
         }
         return null;
     }
-
-    public static void main(String[] args) {
-        Connection con = Connect.getJDBCConnection();
-        if (con == null) {
-            System.out.println("sai");
-        } else {
-            System.out.println("dung");
-        }
-    }
 }

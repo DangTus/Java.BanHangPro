@@ -6,7 +6,7 @@ public class Product {
     private String name;
     private int price;
     private int amount;
-    private int id_categori;
+    private int idBrand;
     private String about;
     private int status;
 
@@ -14,12 +14,12 @@ public class Product {
 
     }
 
-    public Product(int id, String name, int price, int amount, int id_categori, String about, int status) {
+    public Product(int id, String name, int price, int amount, int idBrand, String about, int status) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.amount = amount;
-        this.id_categori = id_categori;
+        this.idBrand = idBrand;
         this.about = about;
         this.status = status;
     }
@@ -56,12 +56,12 @@ public class Product {
         this.amount = amount;
     }
 
-    public int getId_categori() {
-        return id_categori;
+    public int getIdBrand() {
+        return idBrand;
     }
 
-    public void setId_categori(int id_categori) {
-        this.id_categori = id_categori;
+    public void setIdBrand(int idBrand) {
+        this.idBrand = idBrand;
     }
 
     public String getAbout() {
